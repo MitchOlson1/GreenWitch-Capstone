@@ -1,7 +1,9 @@
 const { User, validateLogin, validateUser } = require("../models/user");
-
+const { Chef, validateChef } = require("../models/chef");
+const { Post } = require("../models/post");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+
 
 const bcrypt = require("bcrypt");
 const express = require("express");
@@ -65,6 +67,28 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/login", async (req, res) => {
+  try {
+    const { error } = validateChef(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    let user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send(`Invalid email or password.`);
+
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword)
+      return res.status(400).send("Invalid email or password.");
+
+    const token = user.generateAuthToken();
+    return res.send(token);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
 // Get all users
 router.get("/", [auth], async (req, res) => {
   try {
@@ -85,6 +109,18 @@ router.get("/:userId", async (req, res) => {
     return res.status(500).send(`Internal Server Error: ${error}`);
   }
 });
+// Get all chefs
+router.get("/chefs", [auth], async (req, res) => {
+  // console.log(req,'key');
+  try {
+    console.log(req.chef);
+    const chefs = await Chef.find();
+    return res.send(chefs);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
 
 // DELETE a single user from the database
 router.delete("/:userId", [auth, admin], async (req, res) => {
@@ -120,7 +156,41 @@ router.put("/:userId/review", async (req, res) => {
 router.get("/:userId/dishes", async (req, res) => {
   try {
     const users = await User.findById(req.params.userId);
+    return res.send(users.dish);
+  } catch (error) {
+    return res.status(500).send(`Internal Server Error: ${error}`);
+  }
+});
+
+//get all posts
+router.get("/:userId/posts", async (req, res) => {
+  try {
+    const users = await User.findById(req.params.userId);
     return res.send(users.post);
+  } catch (error) {
+    return res.status(500).send(`Internal Server Error: ${error}`);
+  }
+});
+
+//put user post
+//http://localhost:3011/api/users/
+router.put("/:userId/newPost",  async (req, res) => {
+  try {
+    let post = await User.findById(req.params.userId);
+    if (!post)
+      return res
+        .status(400)
+        .send(`Post with Id of ${req.params.userId} does not exist!`);
+
+    let newPost = new Post({
+      name: req.body.name,
+      uID: req.body.uID,
+      post: req.body.post
+    });
+    console.log(newPost);
+    post.post.push(newPost);
+    await post.save();
+    return res.status(201).send(post);
   } catch (error) {
     return res.status(500).send(`Internal Server Error: ${error}`);
   }
@@ -169,4 +239,6 @@ router.put("/:userId/post/:postId/dislikes", async (req, res) => {
     return res.status(500).send(`internal server errror: ${error}`);
   }
 });
+
+
 module.exports = router;

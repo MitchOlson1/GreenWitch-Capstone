@@ -12,8 +12,17 @@ const Navbar = () => {
       <ul>
         <li className="brand">
           <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-            <b>SOCIAL MEDIA</b>
+            <b>Green Witch</b>
           </Link>
+        </li>
+        <li>
+          <button onClick={() => navigate("/")}>Home</button>
+        </li>
+        <li>
+          <button onClick={() => navigate("/chef")}>Chefs</button>
+        </li>
+        <li>
+          <button onClick={() => navigate("/schedule")}>Schedule</button>
         </li>
         <li>
           {user ? (

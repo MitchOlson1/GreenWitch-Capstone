@@ -8,7 +8,7 @@ const AuthContext = createContext();
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
-  const BASE_URL = "http://localhost:3011/api/users";
+  const BASE_URL = "http://localhost:3012/api/users";
   const decodedUser = localStorage.getItem("token");
   const decodedToken = decodedUser ? jwtDecode(decodedUser) : null;
   const [user, setUser] = useState(() => decodedToken);
@@ -16,6 +16,12 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const registerUser = async (registerData) => {
+    const form = new FormData();
+    form.append("name", registerData.name);
+    form.append("email", registerData.email);
+    form.append("password", registerData.password);
+    form.append("isAdmin", registerData.isAdmin);
+    form.append("image", registerData.image);
     try {
       let response = await axios.post(`${BASE_URL}/register`, registerData);
       if (response.status === 200) {
@@ -32,6 +38,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginUser = async (loginData) => {
+
     try {
       let response = await axios.post(`${BASE_URL}/login`, loginData);
       if (response.status === 200) {

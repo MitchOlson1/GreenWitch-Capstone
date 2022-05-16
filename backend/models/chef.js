@@ -4,7 +4,7 @@ const { string, number } = require("joi");
 
 
 const chefSchema = new mongoose.Schema({
-    name: {type: String, default: ""},
+    chef: {type: String, default: ""},
     uID: {type: String, default: ""},
     post: {type: String, required: true, minlength: 1, maxlength: 420},
     dishes:{type: String, required: true, minlength: 1, maxlength: 420},
@@ -13,9 +13,9 @@ const chefSchema = new mongoose.Schema({
 
 });
 
-const Post = mongoose.model("Chef", chefSchema);
+const Chef = mongoose.model("Chef", chefSchema);
 
-function validateChef(post) {
+function validateChef(chef) {
     const schema = Joi.object({
         post: Joi.string().required(),
         dishes:Joi.string(),
@@ -25,6 +25,6 @@ function validateChef(post) {
 
 module.exports = {
     chefSchema,
-    Post,
+    Chef,
     validateChef,
 };

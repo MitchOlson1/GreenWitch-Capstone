@@ -67,28 +67,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
-  try {
-    const { error } = validateChef(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
-    let user = await User.findOne({ email: req.body.email });
-    if (!user) return res.status(400).send(`Invalid email or password.`);
-
-    const validPassword = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
-    if (!validPassword)
-      return res.status(400).send("Invalid email or password.");
-
-    const token = user.generateAuthToken();
-    return res.send(token);
-  } catch (ex) {
-    return res.status(500).send(`Internal Server Error: ${ex}`);
-  }
-});
-
 // Get all users
 router.get("/", [auth], async (req, res) => {
   try {
@@ -110,14 +88,39 @@ router.get("/:userId", async (req, res) => {
   }
 });
 // Get all chefs
-router.get("/chefs", [auth], async (req, res) => {
-  // console.log(req,'key');
+router.get("/:userId/chefs", async (req, res) => {
   try {
-    console.log(req.chef);
-    const chefs = await Chef.find();
-    return res.send(chefs);
+    const users = await User.findById(req.params.userId);
+    return res.send(users.chefSchema);
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
+//put user chef
+//http://localhost:3011/api/users/
+router.put("/:userId/newChef",  async (req, res) => {
+  try {
+    let chef = await User.findById(req.params.userId);
+    if (!chef)
+      return res
+        .status(400)
+        .send(`Post with Id of ${req.params.userId} does not exist!`);
+
+    let newChef = new Chef({
+      name: req.body.name,
+      uID: req.body.uID,
+      post: req.body.post,
+      dishes: req.body.dishes,
+
+
+    });
+    console.log(newChef);
+    chef.chef.push(newChef);
+    await chef.save();
+    return res.status(201).send(chef);
+  } catch (error) {
+    return res.status(500).send(`Internal Server Error: ${error}`);
   }
 });
 
@@ -147,16 +150,6 @@ router.put("/:userId/review", async (req, res) => {
         .send(`User with id ${req.params.userId} does not exist!`);
     let about = await User.findByIdAndUpdate(req.params.userId, req.body);
     return res.send(about);
-  } catch (error) {
-    return res.status(500).send(`Internal Server Error: ${error}`);
-  }
-});
-
-//get all dishes
-router.get("/:userId/dishes", async (req, res) => {
-  try {
-    const users = await User.findById(req.params.userId);
-    return res.send(users.dish);
   } catch (error) {
     return res.status(500).send(`Internal Server Error: ${error}`);
   }

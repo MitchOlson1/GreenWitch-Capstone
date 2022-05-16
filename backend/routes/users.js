@@ -91,7 +91,7 @@ router.get("/:userId", async (req, res) => {
 router.get("/:userId/chefs", async (req, res) => {
   try {
     const users = await User.findById(req.params.userId);
-    return res.send(users.chefSchema);
+    return res.send(users.chef);
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
   }

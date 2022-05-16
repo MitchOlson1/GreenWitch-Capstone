@@ -22,7 +22,7 @@ const Navbar = () => {
           <button onClick={() => navigate("/chef")}>Chefs</button>
         </li>
         <li>
-          <button onClick={() => navigate("/schedule")}>Schedule</button>
+          <button onClick={() => navigate("/calendar")}>Calendar</button>
         </li>
         <li>
           {user ? (
@@ -37,3 +37,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

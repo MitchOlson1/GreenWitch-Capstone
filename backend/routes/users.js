@@ -1,5 +1,5 @@
 const { User, validateLogin, validateUser } = require("../models/user");
-const { Chef, validateChef } = require("../models/chef");
+const { Chef } = require("../models/chef");
 const { Post } = require("../models/post");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
@@ -78,67 +78,65 @@ router.get("/", [auth], async (req, res) => {
   }
 });
 
-//GET User by Id
-router.get("/:userId", async (req, res) => {
-  try {
-    const users = await User.findById(req.params.userId);
-    return res.send(users);
-  } catch (error) {
-    return res.status(500).send(`Internal Server Error: ${error}`);
-  }
-});
+// //GET User by Id
+// router.get("/:userId", async (req, res) => {
+//   try {
+//     const users = await User.findById(req.params.userId);
+//     return res.send(users);
+//   } catch (error) {
+//     return res.status(500).send(`Internal Server Error: ${error}`);
+//   }
+// });
+
 // Get all chefs
-router.get("/:userId/chefs", async (req, res) => {
+router.get("/chefs", async (req, res) => {
   try {
-    const users = await User.findById(req.params.userId);
-    return res.send(users.chef);
+    const chef = await Chef.find();
+    return res.send(chef);
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
   }
 });
 
-//put user chef
-//http://localhost:3011/api/users/
-router.put("/:userId/newChef",  async (req, res) => {
+//post chef
+//http://localhost:3012/api/users/
+router.post("/newChef",  async (req, res) => {
   try {
-    let chef = await User.findById(req.params.userId);
-    if (!chef)
-      return res
-        .status(400)
-        .send(`Post with Id of ${req.params.userId} does not exist!`);
+  //  const { error } = validateChef(req,res);
+  //   if (error)
+  //     return res
+  //       .status(400)
+  //       .send(req,res);
 
-    let newChef = new Chef({
-      name: req.body.name,
-      uID: req.body.uID,
+    let newChef = await new Chef({
+      chef: req.body.chef,
       post: req.body.post,
       dishes: req.body.dishes,
 
-
     });
-    console.log(newChef);
-    chef.chef.push(newChef);
-    await chef.save();
-    return res.status(201).send(chef);
+   
+    await newChef.save();
+    return res.status(201).send(newChef);
   } catch (error) {
     return res.status(500).send(`Internal Server Error: ${error}`);
   }
 });
 
 
-// DELETE a single user from the database
-router.delete("/:userId", [auth, admin], async (req, res) => {
-  try {
-    const user = await User.findById(req.params.userId);
-    if (!user)
-      return res
-        .status(400)
-        .send(`User with id ${req.params.userId} does not exist!`);
-    await user.remove();
-    return res.send(user);
-  } catch (ex) {
-    return res.status(500).send(`Internal Server Error: ${ex}`);
-  }
-});
+// // DELETE a single user from the database
+// router.delete("/:userId", [auth, admin], async (req, res) => {
+//   try {
+//     const user = await User.findById(req.params.userId);
+//     if (!user)
+//       return res
+//         .status(400)
+//         .send(`User with id ${req.params.userId} does not exist!`);
+//     await user.remove();
+//     return res.send(user);
+//   } catch (ex) {
+//     return res.status(500).send(`Internal Server Error: ${ex}`);
+//   }
+// });
 
 //PUT add a review/description
 router.put("/:userId/review", async (req, res) => {
@@ -166,7 +164,7 @@ router.get("/:userId/posts", async (req, res) => {
 });
 
 //put user post
-//http://localhost:3011/api/users/
+//http://localhost:3012/api/users/
 router.put("/:userId/newPost",  async (req, res) => {
   try {
     let post = await User.findById(req.params.userId);

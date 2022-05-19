@@ -19,10 +19,10 @@ const Navbar = () => {
           <button onClick={() => navigate("/")}>Home</button>
         </li>
         <li>
-          <button onClick={() => navigate("/chef")}>Chefs</button>
+          <button onClick={() => navigate("/calendar")}>Calendar</button>
         </li>
         <li>
-          <button onClick={() => navigate("/calendar")}>Calendar</button>
+          <button onClick={() => navigate("/events")}>Events</button>
         </li>
         <li>
           {user ? (

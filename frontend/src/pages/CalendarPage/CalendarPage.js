@@ -1,46 +1,68 @@
-// import {GoogleLogin} from 'react-google-login'
-// import axios from 'axios'
+import { InlineWidget } from "react-calendly";
+import axios from 'axios';
 
 
-// function CalendarPage() {
+function CalendarPage() {
 
-//     const responseGoogle = (response) => {
-//         console.log(response)
-//         const { code } = response
-//         axios.post(' http://localhost:4000/api/users/create-tokens', { code })
-//         .then(response => {
-//             console.log(response.data)
-//         })
-//         .catch(error => console.log)
-//     }
+  
+// Calendly.initInlineWidget({
+//     url: 'https://calendly.com/greenwitch',
+//     parentElement: document.getElementById('SA'),
+//     prefill: {},
+//     utm: {}
+//    });
 
-    
-//     const responseError = (error) => {
-//         console.log(error)
-//     }
-
-//     return (
-//         <div>
-
-//         <div className="App">
-//             <h1>Google Calendar</h1>
-//         </div>
-//         <div>
-//             <GoogleLogin clientId='64833929409-1umo9q3tqup8v2mlg523mhh0i8ukr8mr.apps.googleusercontent.com'
-//             buttonText='Sign in Authorize Calendar'
-//             onSuccess={responseGoogle}
-//             onFailure={responseError}
-//             cookiePolicy={'single_host_origin'}
-//             responseType='code'
-//             accessType='offline'
-//             scope='openid email profile https://www.googleapis.com/auth/calendar'
-//             />
-//         </div>
-
-//         </div>
+    return (
+        
+        <InlineWidget
+  iframeTitle="GreenWitch Scheduling Page"
+  pageSettings={{
+    backgroundColor: 'ffffff',
+    hideEventTypeDetails: false,
+    hideGdprBanner: true,
+    hideLandingPageDetails: false,
+    primaryColor: '00a2ff',
+    textColor: '4d5055'
+  }}
+  prefill={{
+    customAnswers: {
+      a1: 'a1',
+      a10: 'a10',
+      a2: 'a2',
+      a3: 'a3',
+      a4: 'a4',
+      a5: 'a5',
+      a6: 'a6',
+      a7: 'a7',
+      a8: 'a8',
+      a9: 'a9'
+    },
+    date: new Date('2022-05-19T00:11:30.069Z'),
+    email: 'test@test.com',
+    firstName: 'Jon',
+    guests: [
+      'janedoe@example.com',
+      'johndoe@example.com'
+    ],
+    lastName: 'Snow',
+    name: 'Jon Snow'
+  }}
+  styles={{
+    height: '1000px'
+  }}
+  url="https://calendly.com/greenwitch"
+  utm={{
+    utmCampaign: 'Spring Sale 2019',
+    utmContent: 'Shoe and Shirts',
+    utmMedium: 'Ad',
+    utmSource: 'Facebook',
+    utmTerm: 'Spring'
+  }}
+/>
+       
 
         
 
-//     )
-// }
-// export default CalendarPage;
+    )
+}
+export default CalendarPage;

@@ -4,8 +4,6 @@ const usersRouter = require("./routes/users");
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { google } = require('googleapis');
-const { OAuth2 } = google.auth;
 const createError = require('http-errors');
 const morgan = require('morgan');
 

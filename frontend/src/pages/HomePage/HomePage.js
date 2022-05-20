@@ -9,6 +9,7 @@ const HomePage = (props) => {
   const [allChefPosts, setallChefPosts] = useState([]);
   const [Chefs, setChefs] = useState([]);
   const [userChefs, setUserChefs] = useState([]);
+  const [image, SetImage] = useState([]);
 
   async function getChefs() {
     // console.log(user._id);

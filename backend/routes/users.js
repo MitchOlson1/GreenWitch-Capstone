@@ -1,8 +1,10 @@
 const { User, validateLogin, validateUser } = require("../models/user");
 const { Chef } = require("../models/chef");
 const { Post } = require("../models/post");
+const { Meal } = require("../models/meal");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const fileUpload = require("../middleware/images.js");
 
 
 const bcrypt = require("bcrypt");
@@ -88,6 +90,30 @@ router.get("/", [auth], async (req, res) => {
 //   }
 // });
 
+// put meal
+//http://localhost:3012/api/users/newMeal
+router.put("/:chefId/newMeal",  async (req, res) => {
+  try { 
+    let chef = await Chef.findById(req.params.chefId);
+    if (!chef)
+      return res
+        .status(400)
+        .send(`Post with Id of ${req.params.chefId} does not exist!`);
+  
+    let newMeal = new Meal({
+      name: req.body.name,
+      description: req.body.description,
+      meal: req.body.meal,
+    });
+    console.log(newMeal);
+    chef.meal.push(newMeal);
+    await chef.save();
+    return res.status(201).send(newMeal);
+  } catch (error) {
+    return res.status(500).send(`Internal Server Error: ${error}`);
+  }
+});
+
 // Get all chefs
 router.get("/chefs", async (req, res) => {
   try {
@@ -121,6 +147,8 @@ router.post("/newChef",  async (req, res) => {
     return res.status(500).send(`Internal Server Error: ${error}`);
   }
 });
+
+
 
 
 // // DELETE a single user from the database

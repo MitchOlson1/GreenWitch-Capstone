@@ -6,6 +6,8 @@ const cors = require("cors");
 const app = express();
 const createError = require('http-errors');
 const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path')
 
 
 
@@ -29,7 +31,20 @@ app.use((err,req,res,next) => {
   });
 });
 
-// app.use("/uploads/images", express.static(path.join(`uploads`, `images`)));
+app.use("/uploads/images", express.static(path.join(`uploads`, `images`)));
+app.use((error, req, res, next) => {
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    });
+  }
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || 500);
+  res.json({ message: error.message | "An unknown error occured!" });
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

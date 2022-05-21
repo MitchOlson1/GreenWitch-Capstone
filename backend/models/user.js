@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema({
     maxLength: 255,
   },
   aboutMe: { type: String, minLength: 2, maxLength: 1024 },
-  post: {type: postSchema},
+  post: [{type: postSchema}],
   password: { type: String, required: true, minLength: 8, maxLength: 1024 },
   isAdmin: { type: Boolean, required: true },
 });

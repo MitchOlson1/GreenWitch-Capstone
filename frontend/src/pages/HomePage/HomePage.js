@@ -19,17 +19,18 @@ const HomePage = (props) => {
     // console.log(response.data);
     setUserChefs(response.data);
   }
-  // async function getChefDishes() {
-  //   setChefs([]);
-  //   for (let i = 0; i < userChefs.length; i++) {
-  //     await axios
-  //       .get(`http://localhost:3012/api/users/${userChefs[i]}/chefs`)
-  //       .then((response) => {
-  //         //console.log(response.data)
-  //         setChefs((chef) => [...chef, response.data]);
-  //       });
-  //   }
-  // }
+  async function getChefInfo (event) {
+    event.preventDefault();
+    setChefs([]);
+    for (let i = 0; i < userChefs.length; i++) {
+      await axios
+        .get(`http://localhost:3012/api/users/${userChefs[i]}/chefs`)
+        .then((response) => {
+          //console.log(response.data)
+          setChefs((chef) => [...chef, response.data]);
+        });
+    }
+  }
 
   
   useEffect(() => {
@@ -47,9 +48,8 @@ const HomePage = (props) => {
     <table className="table">
       <thead>
         <tr>
-          <td>Chef</td>
+          <td>CHEFS</td>
           <td></td>
-          <td>Dishes</td>
           <td>{" "}</td>
         </tr>
       </thead>
@@ -59,8 +59,8 @@ const HomePage = (props) => {
             return (
               <tr key={i}>
                 <td>{f.chef}</td>
-                <td>{f.post}</td>
-                <td>{f.dishes}</td>
+                {/* <td>{f.post}</td>
+                <td>{f.dishes}</td> */}
                 <td>
                   {/* <LikeDislike f={f} getChefDishes={getChefDishes} /> */}
                 </td>

@@ -33,13 +33,13 @@ function CalendarPage() {
     },
     date: new Date('2022-05-19T00:11:30.069Z'),
     email: 'test@test.com',
-    firstName: 'Jon',
+    firstName: '',
     guests: [
       'janedoe@example.com',
       'johndoe@example.com'
     ],
-    lastName: 'Snow',
-    name: 'Jon Snow'
+    lastName: '',
+    name: ''
   }}
   styles={{
     height: '1000px'

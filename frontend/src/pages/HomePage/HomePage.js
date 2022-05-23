@@ -3,15 +3,19 @@ import axios from "axios";
 import { useContext } from "react";
 import AuthContext from "../../context/AuthContext";
 import LikeDislike from "../../components/LikeDislike/LikeDislike";
+import "./HomePage.css"
 
 const HomePage = (props) => {
+  document.body.style.backgroundColor = "darkgreen";
   const { user, chef } = useContext(AuthContext);
 
   const [userChefs, setUserChefs] = useState([]);
   const [image, SetImage] = useState([]);
   const [chefClicked, setChefClicked] = useState(false);
   const [selectedChef, setSelectedChef] = useState([]);
-  const [foundChef, setFoundChef] = useState([])
+  const [foundChef, setFoundChef] = useState([]);
+  const [meals, setMeals] = useState([]);
+
 
 
   async function getChefs() {
@@ -35,24 +39,14 @@ const HomePage = (props) => {
       let name = e.target.innerText;
       let foundChef = userChefs.find(e => e.chef === name)
       setFoundChef(foundChef)
-      // console.log("foundChef", foundChef)
+      setMeals(foundChef.meal[0]);
+      console.log(meals)
+      console.log("foundChef", foundChef)
+      foundChef.map(chef => 
+        console.log(chef)
+      )
     }
 
-  
-  // async function handleClickInfo (event) {
-  //   event.preventDefault();
-  //   setChefs([]);
-  //     await axios
-  //       .get(`http://localhost:3012/api/users/${userChefs[chef._id]}`)
-  //       .then((response) => 
-  //         //console.log(response.data)
-  //         setChefs((chef) => [...chef, response.data])
-  //       );
-  //       console.log(chef)
-    
-  // }
-
-  
   useEffect(() => {
     getChefs();
     console.log()
@@ -75,41 +69,24 @@ const HomePage = (props) => {
   //   </div>
   //   )
   // }
-  if (chefClicked === true){
-    return(
-      <div className="container">
-        <h1>{foundChef.dishes}</h1>
-        <h2></h2>
-      </div>
-    )
-  }
-  else{
-
-  
   return (
     <div className="container">
      <h2>Home Page for {user.name}!</h2>
         {userChefs && 
           userChefs.map((chef, i) => (
-            <li key={i}>
-              <button onClick={displayChef}>                
+            <li className="btn1" key={i}>
+              <button className="btn btn-outline-success" onClick={displayChef}>                
                 {chef.chef}        
               </button>
             </li>        
           ))}
-
-            {/* {(chefClicked === true) && 
-                userChefs.map((chef, i) => (
-                <li key={i}>
-                  {chef.meal}
-                </li>
-              ))
-            } */}
-          
-         
+          {chefClicked === true &&
+            meals.map((obj) => (
+             console.log(obj)
+            ))
+          }  
     </div>
   );
-  }
 };
 
 
